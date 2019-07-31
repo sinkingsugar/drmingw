@@ -67,10 +67,10 @@ if ($Env:APPVEYOR_REPO_TAG -eq "true") {
 } else {
     $CMAKE_BUILD_TYPE = 'Debug'
 }
-if ($target -eq "mingw64" -and $Env:APPVEYOR_REPO_TAG -ne "true") {
-    $ENABLE_COVERAGE = 1
+if (Test-Path Env:ENABLE_COVERAGE) {
+    $ENABLE_COVERAGE = ${Env:ENABLE_COVERAGE}
 } else {
-    $ENABLE_COVERAGE = 0
+    $ENABLE_COVERAGE = "no"
 }
 $buildDir = "$buildRoot\$target"
 Exec { cmake "-H." "-B$buildDir" -G "MinGW Makefiles" "-DCMAKE_BUILD_TYPE=$CMAKE_BUILD_TYPE" "-DENABLE_COVERAGE=$ENABLE_COVERAGE" "-DWINDBG_DIR=$WINDBG_DIR" }
@@ -93,9 +93,6 @@ if ($target -eq "mingw64") {
     Exec { python tests\apps\test.py $buildDir\bin\catchsegv.exe "$buildRoot\msvc32\Debug" "$buildRoot\msvc64\Debug" }
 } else {
     Exec { python tests\apps\test.py $buildDir\bin\catchsegv.exe "$buildRoot\msvc32\Debug" }
-}
-if ($ENABLE_COVERAGE -and (Test-Path Env:COVERALLS_REPO_TOKEN)) {
-    Exec { C:\Python36\Scripts\coveralls --include src --gcov-options="-lp" }
 }
 
 #
