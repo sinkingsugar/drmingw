@@ -31,7 +31,7 @@ install:
 - ps: Get-Command sh.exe -All | Remove-Item
 
 build_script:
-- powershell -NoProfile -ExecutionPolicy Bypass -file build.ps1 -target %MINGW_TARGET%
+- powershell -NoProfile -ExecutionPolicy Bypass -file build.ps1 -buildRoot %CD%\build -target %MINGW_TARGET%
 
 artifacts:
 - path: build\mingw\drmingw-*.7z
