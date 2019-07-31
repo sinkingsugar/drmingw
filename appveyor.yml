@@ -23,6 +23,13 @@ environment:
   - MINGW_TARGET: mingw64
   - MINGW_TARGET: mingw32
 
+install:
+- set Path=C:\Python36;%Path%
+- python -m ensurepip
+- python -m pip install cpp-coveralls==0.4.1
+# CMake refuses to generate MinGW Makefiles if sh.exe is in the Path
+- ps: Get-Command sh.exe -All | Remove-Item
+
 build_script:
 - powershell -NoProfile -ExecutionPolicy Bypass -file build.ps1 -target %MINGW_TARGET%
 
