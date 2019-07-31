@@ -85,10 +85,10 @@ Exec { cmake --build $buildDir --use-stderr --target all "--" "-j${Env:NUMBER_OF
 #
 $Env:Path = "$WINDBG_DIR;$Env:Path"
 Exec { cmake --build $buildDir --use-stderr --target test }
-Exec { cmake -Htests\apps "-B$buildRoot\msvc32" -G "Visual Studio 15 2017" }
+Exec { cmake -Htests\apps "-B$buildRoot\msvc32" -G "Visual Studio 15 2017" "-DCMAKE_SYSTEM_VERSION=10.0.16299.0" }
 Exec { cmake --build "$buildRoot\msvc32" --config Debug "--" /verbosity:minimal /maxcpucount }
 if ($target -eq "mingw64") {
-    Exec { cmake -Htests\apps "-B$buildRoot\msvc64" -G "Visual Studio 15 2017 Win64" }
+    Exec { cmake -Htests\apps "-B$buildRoot\msvc64" -G "Visual Studio 15 2017 Win64" "-DCMAKE_SYSTEM_VERSION=10.0.16299.0" }
     Exec { cmake --build "$buildRoot\msvc64" --config Debug "--" /verbosity:minimal /maxcpucount }
     Exec { python tests\apps\test.py $buildDir\bin\catchsegv.exe "$buildRoot\msvc32\Debug" "$buildRoot\msvc64\Debug" }
 } else {
